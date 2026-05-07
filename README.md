@@ -88,3 +88,43 @@ Want to add even more code and fun styles to your GitHub Pages website? [Follow 
 ## Everything you need to know about GitHub
 
 Getting started is the hardest part. If there’s anything you’d like to know as you get started with GitHub, try searching [GitHub Help](https://help.github.com). Our documentation has tutorials on everything from changing your repository settings to configuring GitHub from your command line.
+
+
+## 每周 GitHub 热榜脚本
+
+新增 `weekly_github_trending.py`，直接抓取 GitHub Trending 页面（`since=weekly`）的周榜项目，并推送到你的 webhook。
+
+### 1) 安装依赖
+
+无第三方依赖（使用 Python 标准库即可运行）。
+
+### 2) 配置环境变量
+
+```bash
+export PUSH_WEBHOOK_URL=你的推送Webhook地址
+```
+
+### 3) 运行示例
+
+```bash
+python weekly_github_trending.py --language python --top 10 --dry-run
+python weekly_github_trending.py --language python --top 10
+```
+
+`--dry-run` 只打印榜单，不推送。
+
+### 4) 每周自动执行（crontab）
+
+```bash
+# 每周一 09:00（UTC）执行
+0 9 * * 1 /usr/bin/python3 /path/to/weekly_github_trending.py --language python --top 10 >> /tmp/gh_trending.log 2>&1
+```
+
+Webhook 接收 JSON 结构：
+
+```json
+{
+  "title": "GitHub 周热榜（YYYY-MM-DD）",
+  "content": "榜单正文"
+}
+```
